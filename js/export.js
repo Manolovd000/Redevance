@@ -173,6 +173,34 @@
     });
   }
 
+  /* -------------------------------------------------------------------- Logo */
+  function imageDepuis(src) {
+    return new Promise(function (resolve) {
+      if (!src) { resolve(null); return; }
+      var img = new Image();
+      img.onload = function () {
+        try { // l'image est-elle utilisable dans un canvas exportable ?
+          var essai = document.createElement('canvas');
+          essai.width = essai.height = 1;
+          var c = essai.getContext('2d');
+          c.drawImage(img, 0, 0, 1, 1);
+          c.getImageData(0, 0, 1, 1);
+          resolve(img);
+        } catch (e) { resolve(null); }
+      };
+      img.onerror = function () { resolve(null); };
+      img.src = src;
+    });
+  }
+
+  function chargerLogo() {
+    var cfg = global.CDL_CONFIG;
+    if (!cfg.logo || !cfg.logo.fichier) return Promise.resolve(null);
+    return imageDepuis(cfg.logo.fichier).then(function (img) {
+      return img || imageDepuis(global.CDL_LOGO_SECOURS);
+    });
+  }
+
   /* ----------------------------------------------------------- Outils de texte */
   function couper(ctx, texte, largeurMax, lignesMax) {
     var mots = String(texte).split(/\s+/), lignes = [], courante = '';
@@ -209,8 +237,9 @@
 
     var carteL = LARG - 2 * MARGE, carteH = 404;
     return polices.then(function () {
-      return dessinerCarte(carteL * ECH, carteH * ECH, etat);
-    }).then(function (carte) {
+      return Promise.all([dessinerCarte(carteL * ECH, carteH * ECH, etat), chargerLogo()]);
+    }).then(function (prets) {
+      var carte = prets[0], logo = prets[1];
       var c = document.createElement('canvas');
       c.width = LARG * ECH; c.height = HAUT * ECH;
       var ctx = c.getContext('2d');
@@ -230,10 +259,20 @@
       }
 
       // En-tête
-      y += 10;
-      txt('Proposition de redevance pour une manifestation sportive', x0, y, '600 12.5px ' + SANS, ENCRE2);
       var date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-      txt('Simulation du ' + date, x1, y, '400 12.5px ' + SANS, ENCRE2, 'right');
+      if (logo) {
+        var hl = 44, ll = hl * logo.naturalWidth / logo.naturalHeight;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(logo, x0, y, ll, hl);
+        txt('Proposition de redevance pour une manifestation sportive', x1, y + 19, '600 12.5px ' + SANS, ENCRE, 'right');
+        txt('Simulation du ' + date, x1, y + 37, '400 12.5px ' + SANS, ENCRE2, 'right');
+        filet(y + hl + 14, x0, x1, ENCRE, 1);
+        y += hl + 20;
+      } else {
+        y += 10;
+        txt('Proposition de redevance pour une manifestation sportive', x0, y, '600 12.5px ' + SANS, ENCRE2);
+        txt('Simulation du ' + date, x1, y, '400 12.5px ' + SANS, ENCRE2, 'right');
+      }
       ctx.font = 'italic 600 30px ' + SERIF;
       var titres = couper(ctx, nom, x1 - x0, 2);
       titres.forEach(function (l) { y += 34; txt(l, x0, y, 'italic 600 30px ' + SERIF, MER); });

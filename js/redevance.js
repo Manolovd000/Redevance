@@ -87,7 +87,8 @@
   function distance(m, sep) {
     sep = sep === undefined ? ' ' : sep;
     if (m < 1000) return Math.round(m) + sep + 'm';
-    return (Math.round(m / 100) / 10).toString().replace('.', ',') + sep + 'km';
+    var km = (Math.round(m / 100) / 10).toFixed(1).split('.');
+    return grouper(km[0], sep) + (km[1] === '0' && m >= 100000 ? '' : ',' + km[1]) + sep + 'km';
   }
 
   global.CDL = global.CDL || {};

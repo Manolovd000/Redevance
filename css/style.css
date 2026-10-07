@@ -55,6 +55,8 @@ button, input, select { font: inherit; color: inherit; }
 }
 
 /* ----------------------------------------------------------------- Panneau */
+.bandeau-logo { display: block; flex: none; padding: 18px 28px 16px; background: var(--blanc); border-bottom: 1px solid var(--filet); line-height: 0; }
+.bandeau-logo img { height: 48px; width: auto; }
 .entete { padding: 26px 28px 20px; }
 .entete h1 {
   margin: 0 0 8px; font-family: var(--serif); font-style: italic; font-weight: 600;

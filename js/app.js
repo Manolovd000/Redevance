@@ -399,6 +399,15 @@
   $('btn-png').addEventListener('click', function () { exporterEn('png'); });
   $('btn-pdf').addEventListener('click', function () { exporterEn('pdf'); });
 
+  if (cfg.logo && cfg.logo.fichier) {
+    var bandeau = $('bandeau-logo'), logo = $('logo');
+    logo.alt = cfg.logo.alt || '';
+    logo.onerror = function () { bandeau.hidden = true; };
+    logo.src = cfg.logo.fichier;
+    if (cfg.logo.lien) bandeau.href = cfg.logo.lien;
+    bandeau.hidden = false;
+  }
+
   $('pied-bareme').textContent = 'Barème : ' + cfg.versionBareme + '.';
   window.addEventListener('resize', function () { carte.invalidateSize(); });
 })();

@@ -10,7 +10,7 @@ Site web statique (première ébauche) pour estimer la redevance d'un trail dont
 - Mesure automatique du linéaire du tracé situé à l'intérieur des terrains, avec le détail par site.
 - Fenêtre de paramètres : nom du trail, nombre de jours, participants, linéaire, emprise au sol, véhicules.
 - Calcul de la redevance et affichage du détail par poste.
-- Téléchargement d'une fiche A4 en image (PNG) ou en PDF : carte du tracé et des terrains, détail du calcul, montant final.
+- Téléchargement d'une fiche A4 en image (PNG) ou en PDF : logo, carte du tracé et des terrains, détail du calcul, montant final.
 
 ## Mise en ligne avec GitHub Pages
 
@@ -56,6 +56,12 @@ Tout se règle dans `js/config.js` :
 - `fonds` : fonds de carte IGN. Le fond « Carte IGN (SCAN 25) » passe par une clé (`cle`) à remplacer par celle de l'établissement ;
 - `valeursParDefaut`, `territoires`, `couleurs`.
 
+## Logo
+
+- Le logo du Conservatoire figure en haut du panneau et en tête de la fiche exportée, sur fond blanc.
+- Pour le changer : remplacer `img/logo-cdl.jpg` par le nouveau fichier (même nom), puis lancer `python scripts/logo_vers_js.py img/logo-cdl.jpg img/logo-cdl.js`. Cette seconde étape ne sert qu'à l'essai par double-clic ; une fois le site en ligne, le fichier image suffit.
+- Pour un autre nom ou un autre format (PNG, SVG), modifier `logo.fichier` dans `js/config.js`.
+
 ## Mettre à jour les sites
 
 Les périmètres proviennent du flux WFS de l'IGN (Géoplateforme), couche `patrinat_cdl:conservatoire_littoral` (sites acquis, source PatriNat / Conservatoire du littoral), extraction du 07/10/2026.
@@ -85,7 +91,9 @@ js/geo.js               lecture du GPX, croisement tracé / terrains
 js/export.js            fiche A4, export PNG et PDF
 js/app.js               interface
 data/sites_cdl.js       périmètres des sites
+img/                    logo du Conservatoire du littoral
 exemples/               tracé d'exemple (fictif) à Mayotte
 scripts/prep_sites.py   préparation des périmètres
+scripts/logo_vers_js.py copie de secours du logo
 vendor/                 Leaflet 1.9.4 (BSD-2), polices Source Sans 3 et Source Serif 4 (OFL)
 ```

@@ -10,6 +10,16 @@
  */
 window.CDL_CONFIG = {
 
+  /*
+   * Logo affiché en haut du panneau et sur la fiche exportée, toujours sur fond blanc.
+   * Pour le changer, remplacer le fichier (voir le README). Pour le retirer, supprimer ce bloc « logo ».
+   */
+  logo: {
+    fichier: 'img/logo-cdl.jpg',
+    alt: 'Conservatoire du littoral',
+    lien: 'https://www.conservatoire-du-littoral.fr/'
+  },
+
   versionBareme: 'projet de redevance manifestations sportives, version 260626',
 
   bareme: {
